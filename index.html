@@ -1,0 +1,112 @@
+<html lang="ja">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todoリスト</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+ </head>
+ <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+<div class="bg-white rounded-lg shadow p-8 w-full max-w-md">
+        <h1 class="text-3xl font-bold mb-6">Todoリスト</h1>
+    
+    <div class="flex gap-2 mb-6">
+        <input id ="todo" type="text" placeholder="追加して下さい.."
+            class="flex-auto border border-gray-300 rounded px-3 py-2">
+    <button id="button"
+        class="bg-blue-600 text-white font-bold px-2 py-2 rounded hover:bg-blue-700 transition">追加</button>
+    </div>
+    <ul id="todoList" class="gap-2 space-y-2">
+    </ul>
+</div> 
+
+<script>
+    const button = document.querySelector("#button");
+    const todo = document.querySelector("#todo");
+    const todoList = document.querySelector("#todoList");
+
+    const addTodo = () => {
+        const todoText = todo.value.trim();
+        if (todoText === "") {
+            alert("Todoを入力してください");
+            return;
+        }
+
+        const li = document.createElement("li");
+        li.className = "flex items-center justify-between bg-gray-50 rounded px-3 py-2";
+
+        const span = document.createElement("span");
+        span.textContent = todoText;
+
+        const actions = document.createElement("span");
+        actions.className = "flex items-center gap-2";
+
+        const doneButton = document.createElement("button");
+        doneButton.textContent = "完了";
+        doneButton.className = "bg-green-500 text-white text-sm px-2 py-1 rounded hover:bg-green-600 transition";
+        doneButton.addEventListener("click", () => {
+            span.classList.toggle("line-through");
+            span.classList.toggle("text-gray-400");
+        });
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "削除";
+        deleteButton.className = "text-gray-400 hover:text-red-500 text-sm";
+
+        const confirmWrapper = document.createElement("span");
+        confirmWrapper.className = "hidden items-center gap-1 ml-2";
+
+        const confirmText = document.createElement("span");
+        confirmText.textContent = "本当に削除？";
+        confirmText.className = "text-xs text-red-500";
+
+        const confirmYes = document.createElement("button");
+        confirmYes.textContent = "削除する";
+        confirmYes.className = "text-xs text-white bg-red-500 px-2 py-1 rounded hover:bg-red-600";
+
+        const confirmNo = document.createElement("button");
+        confirmNo.textContent = "キャンセル";
+        confirmNo.className = "text-xs text-gray-600 bg-gray-200 px-2 py-1 rounded hover:bg-gray-300";
+
+        deleteButton.addEventListener("click", () => {
+            deleteButton.classList.add("hidden");
+            confirmWrapper.classList.remove("hidden");
+            confirmWrapper.classList.add("flex");
+        });
+
+        confirmYes.addEventListener("click", () => {
+            li.remove();
+        });
+
+        confirmNo.addEventListener("click", () => {
+            confirmWrapper.classList.add("hidden");
+            confirmWrapper.classList.remove("flex");
+            deleteButton.classList.remove("hidden");
+        });
+
+        confirmWrapper.appendChild(confirmText);
+        confirmWrapper.appendChild(confirmYes);
+        confirmWrapper.appendChild(confirmNo);
+
+        actions.appendChild(doneButton);
+        actions.appendChild(deleteButton);
+        actions.appendChild(confirmWrapper);
+
+        li.appendChild(span);
+        li.appendChild(actions);
+        todoList.appendChild(li);
+
+        todo.value = "";
+    };
+
+    button.addEventListener("click", addTodo);
+
+    todo.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            addTodo();
+        }
+    });
+</script>
+    
+</body>
+</html>
